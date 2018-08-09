@@ -1,12 +1,18 @@
 macro_rules! instructions {
-  (struct $enum:ident; fn $fn:ident; @instructions $($ins:ident = $encoding:expr, $($matchers:tt),*);+) => ()
+  (enum $enum:ident; fn $fn:ident; @instructions $($ins:ident = $encoding:expr, $($size:ty),*);+) => (
+      enum $enum {$(
+        $ins( $( $size ),* )
+      ),+}
+    )
 }
 
+type a13 = u32;
+type d13 = u32;
 
 instructions! {
-  struct Instructions;
+  enum Instructions;
   fn match;
   @instructions
-  name = 0x01, r1, r2, r3, r4;
-  mame = 0x02, r2, r3
+  Name = 0x01, a13, a13, a13, d13;
+  Mame = 0x02, a13, a13
 }
