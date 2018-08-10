@@ -1,13 +1,13 @@
 macro_rules! instructions {
-  (enum $enum:ident; fn $fn:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty),*);+) => (
-      enum $enum {$(
+  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty),*);+) => (
+      enum $enum_raw {$(
         $ins( $( $size ),* )
       ),+}
-      fn $fn($cell_var: $cell) -> $enum {
+      fn $fn_raw($cell_var: $cell) -> $enum_raw {
         $(let $anvar = $anexpr);+;
         let part = $extract;
         match part {
-          $( $encoding => $enum::$ins($( $id ),*) ),+,
+          $( $encoding => $enum_raw::$ins($( $id as $size ),*) ),+,
           _ => panic!("Instruction problem")
         }
       }
@@ -25,8 +25,10 @@ const I3: u64 = 0b000000000000_0000000000000_0000000000000_1111111111111_0000000
 const I4: u64 = 0b000000000000_0000000000000_0000000000000_0000000000000_1111111111111;
 
 instructions! {
-  enum Instructions;
-  fn matcher;
+  enum InstructionsRaw;
+  enum InstructionsProcessed;
+  fn matcher_raw;
+  fn matcher_processed;
   cell Cell, n;
   let extract = (n | I0) >> 52;
   let r1      = (n | I1) >> 39;
