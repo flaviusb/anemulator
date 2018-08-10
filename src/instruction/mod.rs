@@ -1,8 +1,12 @@
 macro_rules! instructions {
-  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty),*);+;) => (
+  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),*);+;) => (
       #[derive(Eq, PartialEq, Debug)]
       enum $enum_raw {$(
         $ins( $( $size ),* )
+      ),+}
+      #[derive(Eq, PartialEq, Debug)]
+      enum $enum_processed {$(
+        $ins( $( $processed_type ),* )
       ),+}
       fn $fn_raw($cell_var: $cell) -> $enum_raw {
         $(let $anvar = $anexpr);+;
@@ -39,9 +43,9 @@ instructions! {
   let r4      = (n & I4) >> 51;
   @match extract;
   @instructions
-  Name = 0x01, r1|a13, r2|a13, r3|a13, r4|d13;
-  Mame = 0x02, r1|a13, r2|a13;
-  Fame = 0x03, r1|v13, r2|a13;
+  Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell;
+  Mame = 0x02, r1|a13|Cell, r2|a13|Cell;
+  Fame = 0x03, r1|v13|v13, r2|a13|Cell;
 }
 
 #[test]
