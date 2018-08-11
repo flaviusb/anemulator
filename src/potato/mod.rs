@@ -67,4 +67,8 @@ instructions! {
   SelectT    = 0x1C, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
   SelectLi   = 0x1D, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
   SelectTi   = 0x1E, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+
+
+  // Swap - not sure this is really needed, but leave it in for now
+  Swap       = 0x99, r1|a13|Cell, r2|a13|Cell { panic!("Swap.") };
 }
