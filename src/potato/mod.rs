@@ -30,7 +30,22 @@ instructions! {
   let r4      = (n & I4) >> 51;
   @match extract;
   @instructions
-  Nop  = 0x00, { panic!("Nop"); };
-  Mame = 0x02, r1|a13|Cell, r2|a13|Cell { panic!("Mame"); };
-  Fame = 0x03, r1|v13|v13, r2|a13|Cell { panic!("Fame"); };
+  Nop      = 0x00, { panic!("Nop"); };
+  //Arithmetic operators: <Opp><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>
+  AddIU64M = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIU64M"); };
+  SubIU64M = 0x02, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIU64M"); };
+  MulIU64M = 0x03, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIU64M"); };
+  DivIU64M = 0x04, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIU64M"); };
+  AddIU64S = 0x05, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIU64S"); };
+  SubIU64S = 0x06, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIU64S"); };
+  MulIU64S = 0x07, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIU64S"); };
+  DivIU64S = 0x08, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIU64S"); };
+  AddIS64M = 0x09, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIS64M"); };
+  SubIS64M = 0x0A, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIS64M"); };
+  MulIS64M = 0x0B, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIS64M"); };
+  DivIS64M = 0x0C, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIS64M"); };
+  AddIS64S = 0x0D, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIS64S"); };
+  SubIS64S = 0x0E, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIS64S"); };
+  MulIS64S = 0x0F, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIS64S"); };
+  DivIS64S = 0x10, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIS64S"); };
 }
