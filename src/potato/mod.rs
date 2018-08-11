@@ -1,6 +1,6 @@
 /*
  * The Potato Chip is the 'primary' kind of core in the fantasy system.
- * It has no registers, 32k of scratch memory arranged in 64 bit cells, a 64 bit instruction size, and 0-4 addresses per instruction.
+ * It has no registers, 64KB of scratch memory as a 13 bit address space arranged in 64 bit cells, a 64 bit instruction size, and 0-4 addresses per instruction.
  */
 
 
