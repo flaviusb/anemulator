@@ -1,5 +1,5 @@
 macro_rules! instructions {
-  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),*);+;) => (
+  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
       #[derive(Eq, PartialEq, Debug)]
       enum $enum_raw {$(
         $ins( $( $size ),* )
@@ -14,6 +14,11 @@ macro_rules! instructions {
         match part {
           $( $encoding => $enum_raw::$ins($( $id as $size ),*) ),+,
           _ => panic!("Instruction problem")
+        }
+      }
+      fn $fn_processed($cell_var: $enum_raw) -> $enum_processed {
+        match $cell_var {
+          $( $enum_raw::$ins($( $id ),*) => $proc ),+,
         }
       }
     )
@@ -43,9 +48,9 @@ instructions! {
   let r4      = (n & I4) >> 51;
   @match extract;
   @instructions
-  Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell;
-  Mame = 0x02, r1|a13|Cell, r2|a13|Cell;
-  Fame = 0x03, r1|v13|v13, r2|a13|Cell;
+  Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell { panic!("Name"); };
+  Mame = 0x02, r1|a13|Cell, r2|a13|Cell { panic!("Mame"); };
+  Fame = 0x03, r1|v13|v13, r2|a13|Cell { panic!("Fame"); };
 }
 
 #[test]
@@ -54,4 +59,5 @@ fn test_instruction_parsing() {
   let n: u64 = 0b0000000000000_0000000000000_0000000000000_1000000000000_000000000010;
   assert_eq!(matcher_raw(m), InstructionsRaw::Name(0, 0, 0, 3));
   assert_eq!(matcher_raw(n), InstructionsRaw::Mame(0b1000000000000, 0));
+  //assert_eq!(matcher_processed(InstructionsRaw::Name(0, 0, 0, 3)), InstructionsProcessed::Name(0, 0, 0, 3));
 }
