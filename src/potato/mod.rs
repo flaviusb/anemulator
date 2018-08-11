@@ -53,15 +53,18 @@ instructions! {
   ShRA64   = 0x12, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
   ShLL64   = 0x13, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
   ShRL64   = 0x14, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
+  // Rotates: Ro<L/R><bits>
+  RoL64    = 0x15, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rotate") };
+  RoR64    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rotate") };
   // Bit Ops
   // Rank <Leading/Trailing> <Immediate?>
-  RankL    = 0x15, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankR    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankLi   = 0x15, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankRi   = 0x16, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankL    = 0x17, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankT    = 0x18, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankLi   = 0x19, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankTi   = 0x1A, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
   // Select <Leading/Trailing> <Immediate?>
-  SelectL    = 0x15, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
-  SelectR    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
-  SelectLi   = 0x15, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
-  SelectRi   = 0x16, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectL    = 0x1B, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectT    = 0x1C, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectLi   = 0x1D, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectTi   = 0x1E, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
 }
