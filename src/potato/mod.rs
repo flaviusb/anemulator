@@ -31,7 +31,7 @@ instructions! {
   @match extract;
   @instructions
   Nop      = 0x00, { panic!("Nop"); };
-  //Arithmetic operators: <Opp><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>
+  // Arithmetic operators: <Op><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>
   AddIU64M = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIU64M"); };
   SubIU64M = 0x02, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIU64M"); };
   MulIU64M = 0x03, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIU64M"); };
@@ -48,4 +48,20 @@ instructions! {
   SubIS64S = 0x0E, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIS64S"); };
   MulIS64S = 0x0F, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIS64S"); };
   DivIS64S = 0x10, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIS64S"); };
+  // Shifts: Sh<L/R><A/L><bits>
+  ShLA64   = 0x11, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
+  ShRA64   = 0x12, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
+  ShLL64   = 0x13, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
+  ShRL64   = 0x14, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Shift") };
+  // Bit Ops
+  // Rank <Leading/Trailing> <Immediate?>
+  RankL    = 0x15, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankR    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankLi   = 0x15, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankRi   = 0x16, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  // Select <Leading/Trailing> <Immediate?>
+  SelectL    = 0x15, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectR    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectLi   = 0x15, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
+  SelectRi   = 0x16, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
 }
