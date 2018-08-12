@@ -37,8 +37,9 @@ instructions! {
   let r3 = 0;
   let r4 = 0;
   let head = 0;
+  @head head;
   @unextractout
-  (head & I0) + ((r1 << 12) & I1) + ((r2 << 25) & I2) + ((r3 << 38) & I3) + ((r4 << 51) & I4);
+  ((head as u64) & I0) + (((r1 as u64) << 12) & I1) + (((r2 as u64) << 25) & I2) + (((r3 as u64) << 38) & I3) + (((r4 as u64) << 51) & I4);
   @instructions
   Nop      = 0x00, { panic!("Nop"); };
   // Arithmetic operators: <Op><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>

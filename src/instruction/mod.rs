@@ -1,5 +1,5 @@
 macro_rules! instructions {
-  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_unextract:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; @extract $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @unextract $(let $unanvar:ident = $unanexpr:expr);+ ; @unextractout $unextract_combine:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
+  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_unextract:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; @extract $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @unextract $(let $unanvar:ident = $unanexpr:expr);+ ; @head $head_var:ident; @unextractout $unextract_combine:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
       #[derive(Eq, PartialEq, Debug)]
       enum $enum_raw {$(
         $ins( $( $size ),* )
@@ -19,6 +19,15 @@ macro_rules! instructions {
       fn $fn_processed($cell_var: $enum_raw) -> $enum_processed {
         match $cell_var {
           $( $enum_raw::$ins($( $id ),*) => $proc ),+,
+        }
+      }
+      fn $fn_unextract($cell_var: $enum_raw) -> $cell {
+        $(let $unanvar = $unanexpr);+;
+        match $cell_var {
+          $( $enum_raw::$ins($( $id ),*) => {
+            let $head_var = $encoding;
+            $unextract_combine
+          } ),+,
         }
       }
     )
@@ -55,8 +64,9 @@ instructions! {
   let r3 = 0;
   let r4 = 0;
   let head = 0;
+  @head head;
   @unextractout
-  (head & I0) + ((r1 << 12) & I1) + ((r2 << 25) & I2) + ((r3 << 38) & I3) + ((r4 << 51) & I4);
+  ((head as u64) & I0) + (((r1 as u64) << 12) & I1) + (((r2 as u64) << 25) & I2) + (((r3 as u64) << 38) & I3) + (((r4 as u64) << 51) & I4);
   @instructions
   Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell { panic!("Name"); };
   Mame = 0x02, r1|a13|Cell, r2|a13|Cell { panic!("Mame"); };
@@ -65,9 +75,14 @@ instructions! {
 
 #[test]
 fn test_instruction_parsing() {
-  let m: u64 = 0b0000000000011_0000000000000_0000000000000_0000000000000_000000000001;
-  let n: u64 = 0b0000000000000_0000000000000_0000000000000_1000000000000_000000000010;
-  assert_eq!(matcher_raw(m), InstructionsRaw::Name(0, 0, 0, 3));
-  assert_eq!(matcher_raw(n), InstructionsRaw::Mame(0b1000000000000, 0));
+  let rm: u64 = 0b0000000000011_0000000000000_0000000000000_0000000000000_000000000001;
+  let rn: u64 = 0b0000000000000_0000000000000_0000000000000_1000000000000_000000000010;
+  let pm = InstructionsRaw::Name(0, 0, 0, 3);
+  let pn = InstructionsRaw::Mame(0b1000000000000, 0);
+
+  assert_eq!(matcher_raw(rm), pm);
+  assert_eq!(matcher_raw(rn), pn);
+  assert_eq!(unextract(pm), rm);
+  assert_eq!(unextract(pn), rn);
   //assert_eq!(matcher_processed(InstructionsRaw::Name(0, 0, 0, 3)), InstructionsProcessed::Name(0, 0, 0, 3));
 }
