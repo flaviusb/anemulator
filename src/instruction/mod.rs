@@ -1,5 +1,5 @@
 macro_rules! instructions {
-  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
+  (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_unextract:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; @extract $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @unextract $(let $unanvar:ident = $unanexpr:expr);+ ; @unextractout $unextract_combine:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
       #[derive(Eq, PartialEq, Debug)]
       enum $enum_raw {$(
         $ins( $( $size ),* )
@@ -38,15 +38,25 @@ const I4: u64 = 0b1111111111111_0000000000000_0000000000000_0000000000000_000000
 instructions! {
   enum InstructionsRaw;
   enum InstructionsProcessed;
+  fn unextract;
   fn matcher_raw;
   fn matcher_processed;
   cell Cell, n;
+  @extract
   let extract = (n & I0);
   let r1      = (n & I1) >> 12;
   let r2      = (n & I2) >> 25;
   let r3      = (n & I3) >> 38;
   let r4      = (n & I4) >> 51;
   @match extract;
+  @unextract
+  let r1 = 0;
+  let r2 = 0;
+  let r3 = 0;
+  let r4 = 0;
+  let head = 0;
+  @unextractout
+  (head & I0) + ((r1 << 12) & I1) + ((r2 << 25) & I2) + ((r3 << 38) & I3) + ((r4 << 51) & I4);
   @instructions
   Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell { panic!("Name"); };
   Mame = 0x02, r1|a13|Cell, r2|a13|Cell { panic!("Mame"); };

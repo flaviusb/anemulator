@@ -20,15 +20,25 @@ const I4: u64 = 0b1111111111111_0000000000000_0000000000000_0000000000000_000000
 instructions! {
   enum InstructionsDecode;
   enum InstructionsFetchRegisters;
+  fn encode;
   fn decode;
   fn fetch_μregisters;
   cell Cell, n;
+  @extract
   let extract = (n & I0);
   let r1      = (n & I1) >> 12;
   let r2      = (n & I2) >> 25;
   let r3      = (n & I3) >> 38;
   let r4      = (n & I4) >> 51;
   @match extract;
+  @unextract
+  let r1 = 0;
+  let r2 = 0;
+  let r3 = 0;
+  let r4 = 0;
+  let head = 0;
+  @unextractout
+  (head & I0) + ((r1 << 12) & I1) + ((r2 << 25) & I2) + ((r3 << 38) & I3) + ((r4 << 51) & I4);
   @instructions
   Nop      = 0x00, { panic!("Nop"); };
   // Arithmetic operators: <Op><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>
