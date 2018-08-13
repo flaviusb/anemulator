@@ -96,6 +96,24 @@ instructions! {
 
   // Swap - not sure this is really needed, but leave it in for now
   Swap       = 0x99, r1|a13|Cell, r2|a13|Cell { panic!("Swap.") };
+  // Logic
+  F                        = 0x100, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Nor                      = 0x101, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Xq                       = 0x102, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Notp                     = 0x103, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  MaterialNonimplication   = 0x104, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Notq                     = 0x105, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Xor                      = 0x106, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Nand                     = 0x107, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  And                      = 0x108, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Xnor                     = 0x109, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Q                        = 0x10A, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  IfThen                   = 0x10B, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  P                        = 0x10C, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  ThenIf                   = 0x10D, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  Or                       = 0x10E, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+  T                        = 0x10F, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Logic"); };
+
 }
 
 
