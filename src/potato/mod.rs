@@ -83,3 +83,23 @@ instructions! {
   // Swap - not sure this is really needed, but leave it in for now
   Swap       = 0x99, r1|a13|Cell, r2|a13|Cell { panic!("Swap.") };
 }
+
+
+const SCRATCH_SIZE: usize = 8192;
+// Reserved size = IP + (3 * stack) + state
+const IP_SIZE: u16 = 1;
+const STACK_SIZE: u16 = 256;
+const EXTRA_STATE_SIZE: u16 = 1;
+const MIN_START_POS: u16 = IP_SIZE + (3 * STACK_SIZE) + EXTRA_STATE_SIZE;
+
+pub struct Scratch {
+  pub scratch:  [Cell; SCRATCH_SIZE],
+  pub memstate: [MemState; SCRATCH_SIZE],
+}
+
+
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub enum MemState {
+  Go, Stall
+}
+
