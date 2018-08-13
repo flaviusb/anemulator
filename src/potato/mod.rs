@@ -69,16 +69,30 @@ instructions! {
   RoR64    = 0x16, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rotate") };
   // Bit Ops
   // Rank <Leading/Trailing> <Immediate?>
-  RankL    = 0x17, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankT    = 0x18, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankLi   = 0x19, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
-  RankTi   = 0x1A, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  // Rank(x, y) → z ≡ How many 1s there are up to the xth bit of y, starting from Leading or Trailing
+  RankL      = 0x17, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankT      = 0x18, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankLi     = 0x19, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
+  RankTi     = 0x1A, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Rank") };
   // Select <Leading/Trailing> <Immediate?>
+  // Select(x, y) → z ≡ The index of the xth 1 of y, starting from Leading or Trailing
   SelectL    = 0x1B, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
   SelectT    = 0x1C, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell { panic!("Select") };
   SelectLi   = 0x1D, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
   SelectTi   = 0x1E, r1|v13|v13,  r2|a13|Cell, r3|a13|Cell { panic!("Select") };
-
+  // Mask
+  // Mask(w, x, y) → z ≡ for each bit in w, if it is 0 take the corresponding bit from x, otherwise from y
+  Mask       = 0x1F, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("Mask"); };
+  // Expand <Leading/Trailing>
+  // Similar to the instruction PEXT
+  // Expand (w, x, y) → z ≡ 
+  ExpandL    = 0x20, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("Expand"); };
+  ExpandT    = 0x21, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("Expand"); };
+  // Deposit <Leading/Trailing>
+  // Similar to the instruction PDEP
+  // Deposit (w, x, y) → z ≡ 
+  DepositL   = 0x22, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("Deposit"); };
+  DepositT   = 0x23, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("Deposit"); };
 
   // Swap - not sure this is really needed, but leave it in for now
   Swap       = 0x99, r1|a13|Cell, r2|a13|Cell { panic!("Swap.") };
