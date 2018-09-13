@@ -1,0 +1,23 @@
+struct Pipeline {
+  each stage: each stage type
+}
+
+stage type = empty | stage data | stall | fault | hazard etc
+
+stall, fault and hazard can be complex types as well
+
+each stage has a matcher function Future that attempts to produce the next stage type
+
+the overall chip has a matcher that feeds the first pipeline stage, spawns off tasks to run each pipeline in, and holds the chip state that pipeline stages may need to access.
+
+So, something like
+
+macro_rules! pipeline {
+  (
+    enum $state_container:ident;
+    fn $step_fn:ident;
+    $(@stage $in:ident $fn:ident $out:ident);+
+    @cell $cell:ident;
+    @genraw $unextract:ident $from:ident;
+  )
+}
