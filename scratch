@@ -17,7 +17,11 @@ macro_rules! pipeline {
     enum $state_container:ident;
     fn $step_fn:ident;
     $(@stage $in:ident $fn:ident $out:ident);+
-    @cell $cell:ident;
-    @genraw $unextract:ident $from:ident;
+    @cell $cell:ty; // Cell type
+    @addr $addr:ty; // Address type
+    @chip_extra_state $chip_extra_name:ident: $chip_extra:ty; // Chip extra state eg stalled, error
+    @memory $memory:ty; // Memory type
+    @genraw $unextract:ident $from:ty;
+    @initial_fetch $fetch:expr; // Get a cell value to feed to the first stage of the pipeline from memory
   )
 }
