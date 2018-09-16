@@ -3,6 +3,9 @@
  * It has no registers, 64KB of scratch memory as a 13 bit address space arranged in 64 bit cells, a 64 bit instruction size, and 0-4 addresses per instruction.
  */
 
+use tokio::prelude::*;
+use futures::prelude::*;
+use tokio::prelude::Future;
 
 type a13 = usize;
 type d13 = usize;
@@ -23,6 +26,7 @@ instructions! {
   fn encode;
   fn decode;
   fn fetch_μregisters;
+  struct ChipState;
   cell Cell, n;
   @extract
   let extract = (n & I0);
@@ -41,9 +45,9 @@ instructions! {
   @unextractout
   ((head as u64) & I0) + (((r1 as u64) << 12) & I1) + (((r2 as u64) << 25) & I2) + (((r3 as u64) << 38) & I3) + (((r4 as u64) << 51) & I4);
   @instructions
-  Nop      = 0x00, { panic!("Nop"); };
+  Nop      = 0x00, { Ok(InstructionsFetchRegisters::Nop()); };
   // Arithmetic operators: <Op><Int/...><Unsigned/Signed><bits><Modular/Saturating><packing or simd formula if any?>
-  AddIU64M = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("AddIU64M"); };
+  AddIU64M = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { || Ok(InstructionsFetchRegisters::AddIU64M(r1, r2, r3, r4)); };
   SubIU64M = 0x02, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIU64M"); };
   MulIU64M = 0x03, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIU64M"); };
   DivIU64M = 0x04, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIU64M"); };

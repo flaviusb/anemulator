@@ -1,3 +1,8 @@
+use tokio::prelude::*;
+use futures::prelude::*;
+use tokio::prelude::Future;
+
+
 macro_rules! instructions {
   (enum $enum_raw:ident; enum $enum_processed:ident; fn $fn_unextract:ident; fn $fn_raw:ident; fn $fn_processed:ident; cell $cell:ty, $cell_var:ident; @extract $(let $anvar:ident = $anexpr:expr);+ ; @match $extract:expr; @unextract $(let $unanvar:ident = $unanexpr:expr);+ ; @head $head_var:ident; @unextractout $unextract_combine:expr; @instructions $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+; ) => (
       #[derive(Eq, PartialEq, Debug)]
@@ -16,7 +21,7 @@ macro_rules! instructions {
           _ => panic!("Instruction problem")
         }
       }
-      fn $fn_processed($cell_var: $enum_raw) -> $enum_processed {
+      fn $fn_processed($cell_var: $enum_raw) -> impl Future<Item = $enum_processed, Error = F::Error> where F: Future<Item = $enum_processed>, {
         match $cell_var {
           $( $enum_raw::$ins($( $id ),*) => $proc ),+,
         }
@@ -44,12 +49,15 @@ const I2: u64 = 0b0000000000000_0000000000000_1111111111111_0000000000000_000000
 const I3: u64 = 0b0000000000000_1111111111111_0000000000000_0000000000000_000000000000;
 const I4: u64 = 0b1111111111111_0000000000000_0000000000000_0000000000000_000000000000;
 
+struct ExampleState;
+
 instructions! {
   enum InstructionsRaw;
   enum InstructionsProcessed;
   fn unextract;
   fn matcher_raw;
   fn matcher_processed;
+  struct ExampleState;
   cell Cell, n;
   @extract
   let extract = (n & I0);
@@ -68,9 +76,9 @@ instructions! {
   @unextractout
   ((head as u64) & I0) + (((r1 as u64) << 12) & I1) + (((r2 as u64) << 25) & I2) + (((r3 as u64) << 38) & I3) + (((r4 as u64) << 51) & I4);
   @instructions
-  Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell { panic!("Name"); };
-  Mame = 0x02, r1|a13|Cell, r2|a13|Cell { panic!("Mame"); };
-  Fame = 0x03, r1|v13|v13, r2|a13|Cell { panic!("Fame"); };
+  Name = 0x01, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|d13|Cell { Ok(InstructionsProcessed::Name(r1 as Cell, r2 as Cell, r3 as Cell, r4 as Cell)); };
+  Mame = 0x02, r1|a13|Cell, r2|a13|Cell { Ok(InstructionsProcessed::Mame(r1 as Cell, r2 as Cell)); };
+  Fame = 0x03, r1|v13|v13, r2|a13|Cell { Ok(InstructionsProcessed::Fame(r1 as Cell, r2 as Cell)); };
 }
 
 #[test]

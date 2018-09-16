@@ -12,7 +12,7 @@ the overall chip has a matcher that feeds the first pipeline stage, spawns off t
 
 So, something like
 
-macro_rules! pipeline {
+macro_rules! chip_stuff {
   (
     enum $state_container:ident;
     fn $step_fn:ident;
@@ -23,5 +23,7 @@ macro_rules! pipeline {
     @memory $memory:ty; // Memory type
     @genraw $unextract:ident $from:ty;
     @initial_fetch $fetch:expr; // Get a cell value to feed to the first stage of the pipeline from memory
+    @instructions
+    $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+;
   )
 }

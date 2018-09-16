@@ -1,7 +1,6 @@
-[package]
-name = "anemulator"
-version = "0.1.0"
-authors = ["Justin (:flaviusb) Marsh <justin.marsh@flaviusb.net>"]
-
-[dependencies]
-tokio = "0.1.7"
+[workspace]
+members = [
+  "anemulator_macros",
+  "anemulator_hardware",
+  "anemulator",
+]
