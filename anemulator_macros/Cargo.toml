@@ -1,0 +1,10 @@
+[package]
+name = "anemulator_macros"
+version = "0.1.0"
+authors = ["Justin (:flaviusb) Marsh <justin.marsh@flaviusb.net>"]
+
+[dependencies]
+
+[lib]
+name = "anemulator_macros"
+proc-macro = true
