@@ -6,3 +6,4 @@ authors = ["Justin (:flaviusb) Marsh <justin.marsh@flaviusb.net>"]
 [dependencies]
 tokio = "0.1.7"
 futures = "^0.1.20"
+anemulator_macros = { version = "0.1.0", path = "../anemulator_macros" }

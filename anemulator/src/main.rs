@@ -3,13 +3,12 @@
 extern crate tokio;
 extern crate futures;
 
+extern crate anemulator_hardware;
+
 use tokio::prelude::*;
 use tokio::prelude::Future;
 
-#[macro_use]
-mod instruction;
-
-mod potato;
+use anemulator_hardware::*;
 
 fn main() {
     println!("Hello, world!");
