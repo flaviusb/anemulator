@@ -6,6 +6,7 @@ authors = ["Justin (:flaviusb) Marsh <justin.marsh@flaviusb.net>"]
 [dependencies]
 syn = { version = "0.15.9", features = ["full"] }
 quote = "0.6"
+pom = "2.0.1"
 
 [lib]
 name = "anemulator_macros"

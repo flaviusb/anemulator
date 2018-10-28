@@ -15,11 +15,16 @@ use proc_macro::TokenStream;
 use syn::parse::{Parse, ParseStream, Result};
 use syn::spanned::Spanned;
 use syn::{Expr, Ident, Type, Visibility};
+use quote::quote;
+use std::collections::{HashMap};
 
 struct ChipInfo {
   state_container: Ident,
   step_fn:         Ident,
-  
+  pipeline:        Vec<Pipeline>,
+}
+
+struct Pipeline {
 }
 
 impl Parse for ChipInfo {
@@ -30,14 +35,15 @@ impl Parse for ChipInfo {
     input.parse::<Token![fn]>()?;
     let step_fn: Ident = input.parse()?;
     input.parse::<Token![;]>()?;
-    Ok(ChipInfo{state_container, step_fn})
+    let pipeline = vec!{};
+    Ok(ChipInfo{state_container, step_fn, pipeline})
   }
 }
 
 
 #[proc_macro]
 pub fn define_chip(input: TokenStream) -> TokenStream {
-  let ChipInfo {state_container, step_fn} = parse_macro_input!(input as ChipInfo);
+  let ChipInfo {state_container, step_fn, pipeline} = parse_macro_input!(input as ChipInfo);
 
   let expanded = quote! {
     enum #state_container { }
