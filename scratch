@@ -27,3 +27,40 @@ macro_rules! chip_stuff {
     $($ins:ident = $encoding:expr, $($id:ident|$size:ty|$processed_type:ty),* $proc:block);+;
   )
 }
+
+type InstructionBits = u64;
+
+const I0: u64 = 0b0000000000000_0000000000000_0000000000000_0000000000000_111111111111;
+const I1: u64 = 0b0000000000000_0000000000000_0000000000000_1111111111111_000000000000;
+const I2: u64 = 0b0000000000000_0000000000000_1111111111111_0000000000000_000000000000;
+const I3: u64 = 0b0000000000000_1111111111111_0000000000000_0000000000000_000000000000;
+const I4: u64 = 0b1111111111111_0000000000000_0000000000000_0000000000000_000000000000;
+
+enum R { Tag, 1, 2, 3, 4 }
+fn getr(raw: InstructionBits, n: R) -> u64 {
+  match n {
+    case R::Tag => (raw & I0);
+    case R::1   => (raw & I1) >> 12;
+    case R::2   => (raw & I2) >> 25;
+    case R::3   => (raw & I3) >> 38;
+    case R::4   => (raw & I4) >> 51;
+  }
+}
+
+chip! {
+  preamble {
+    chip    = Potato;
+    raw     = InstructionBits;
+    get     = getInstruction; // function that returns a #raw from whatever the current IP is
+    bin2raw = ... // function that takes ... 
+    tag     = toTag; // fn from #raw to #...
+    decode  = decode; // fn from #raw to 
+  }
+  instructions {
+    AddIU64M = 0x01, decode(r1: a13, r2: a13, r3: a13, r4: a13) {|raw| Ok(InstructionsDecode::AddIU64M(getr(raw, R::1), getr(raw, R::2), getr(raw, R::3), getr(raw, R::4))) }, fetch(left: Cell, right: Cell, result_destination: a13, carry_destination: a14), arithmetic(result: Cell, carry: Cell, result_destination: a13, carry_destination: a14), writeback() 
+    SubIU64M = 0x02, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("SubIU64M"); };
+    MulIU64M = 0x03, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("MulIU64M"); };
+    DivIU64M = 0x04, r1|a13|Cell, r2|a13|Cell, r3|a13|Cell, r4|a13|Cell { panic!("DivIU64M"); };
+
+  }
+}
