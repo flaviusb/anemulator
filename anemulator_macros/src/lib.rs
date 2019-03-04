@@ -42,7 +42,7 @@ impl Parse for ChipInfo {
 
 impl ChipInfo {
   fn parse_pipeline(input: ParseStream) -> Vec<Pipeline> {
-    input.parse::<Token![pipeline]>()?;
+    //input.parse::<Token![pipeline]>()?;
     vec!() 
   }
 }
