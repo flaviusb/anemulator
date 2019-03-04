@@ -35,11 +35,17 @@ impl Parse for ChipInfo {
     input.parse::<Token![fn]>()?;
     let step_fn: Ident = input.parse()?;
     input.parse::<Token![;]>()?;
-    let pipeline = vec!{};
+    let pipeline = ChipInfo::parse_pipeline(input);
     Ok(ChipInfo{state_container, step_fn, pipeline})
   }
 }
 
+impl ChipInfo {
+  fn parse_pipeline(input: ParseStream) -> Vec<Pipeline> {
+    input.parse::<Token![pipeline]>()?;
+    vec!() 
+  }
+}
 
 #[proc_macro]
 pub fn define_chip(input: TokenStream) -> TokenStream {
